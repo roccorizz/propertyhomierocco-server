@@ -5,13 +5,19 @@ let jwt = require('jsonwebtoken');
 const app = express()
 const { MongoClient, ObjectId, ServerApiVersion } = require('mongodb');
 require('dotenv').config();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8000;
 // middle wares
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    next()
+})
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('property homie rocco server is running');
+app.get("/", (req, res) => {
+    res.json({ message: "property homie rocco server is running" })
 })
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.mwzl4ri.mongodb.net/?retryWrites=true&w=majority`;
