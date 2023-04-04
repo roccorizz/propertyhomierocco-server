@@ -46,7 +46,7 @@ async function run() {
         const reviews = client.db('propertyHomieRocco').collection('reviews');
 
         //jwt
-        app.post('/jwt', (req, res) => {
+        app.post('/api/jwt', (req, res) => {
             const user = req.body;
             const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' });
             res.send({ token })
