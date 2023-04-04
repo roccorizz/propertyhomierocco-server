@@ -60,7 +60,7 @@ async function run() {
         })
         app.get('/services/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id: ObjectId(id) };
+            const query = { _id: new ObjectId(id) };
             const result = await serviceCollection.findOne(query);
             res.send(result);
         })
@@ -112,8 +112,8 @@ async function run() {
         //get single property
         app.get('/allproperties/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await serviceCollection.findOne(query);
+            const query = { _id: new ObjectId(id) };
+            const result = await propertyCollection.findOne(query);
             res.send(result);
         })
         // reviews api
