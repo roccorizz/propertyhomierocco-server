@@ -59,14 +59,14 @@ async function run() {
             const services = await cursor.toArray();
             res.send(services);
         })
-        app.get('/api/services/:id', async (req, res) => {
+        app.get('/services/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await serviceCollection.findOne(query);
             res.send(result);
         })
         //add new service
-        app.post('/api/services', async (req, res) => {
+        app.post('/services', async (req, res) => {
             const service = req.body;
             const result = await serviceCollection.insertOne(service);
             res.send(result);
@@ -79,7 +79,7 @@ async function run() {
             res.send(services);
         })
         //get single service
-        app.get('/api/service/:id', async (req, res) => {
+        app.get('/service/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await serviceCollection.findOne(query);
@@ -94,7 +94,7 @@ async function run() {
             res.send(properties);
 
         })
-        app.get('/api/featured-properties/:id', async (req, res) => {
+        app.get('/featured-properties/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const properties = await propertyCollection.findOne(query);
@@ -111,7 +111,7 @@ async function run() {
             res.send(properties);
         })
         //get single property
-        app.get('/api/allproperties/:id', async (req, res) => {
+        app.get('/allproperties/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await propertyCollection.findOne(query);
