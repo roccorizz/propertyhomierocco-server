@@ -53,7 +53,7 @@ async function run() {
             console.log({ token })
         })
         //get 3 services
-        app.get('/services', async (req, res) => {
+        app.get('/api/services', async (req, res) => {
             const query = {}
             const cursor = serviceCollection.find(query);
             const services = await cursor.toArray();
