@@ -59,34 +59,34 @@ async function run() {
             const services = await cursor.toArray();
             res.send(services);
         })
-        app.get('/services/:id', async (req, res) => {
+        app.get('/api/services/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await serviceCollection.findOne(query);
             res.send(result);
         })
         //add new service
-        app.post('/services', async (req, res) => {
+        app.post('/api/services', async (req, res) => {
             const service = req.body;
             const result = await serviceCollection.insertOne(service);
             res.send(result);
         })
         //get all services
-        app.get('/all-services', async (req, res) => {
+        app.get('/api/all-services', async (req, res) => {
             const query = {};
             const cursor = serviceCollection.find(query);
             const services = await cursor.toArray();
             res.send(services);
         })
         //get single service
-        app.get('/service/:id', async (req, res) => {
+        app.get('/api/service/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await serviceCollection.findOne(query);
             res.send(result);
         })
         // get featured properties
-        app.get('/featured-properties', async (req, res) => {
+        app.get('/api/featured-properties', async (req, res) => {
             const query = { isFeatured: true };
             const limit = 6;
             const cursor = propertyCollection.find(query).limit(limit);
@@ -94,7 +94,7 @@ async function run() {
             res.send(properties);
 
         })
-        app.get('/featured-properties/:id', async (req, res) => {
+        app.get('/api/featured-properties/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const properties = await propertyCollection.findOne(query);
@@ -104,14 +104,14 @@ async function run() {
 
         // get all properties
 
-        app.get('/allproperties', async (req, res) => {
+        app.get('/api/allproperties', async (req, res) => {
             const query = {};
             const cursor = propertyCollection.find(query);
             const properties = await cursor.toArray();
             res.send(properties);
         })
         //get single property
-        app.get('/allproperties/:id', async (req, res) => {
+        app.get('/api/allproperties/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await propertyCollection.findOne(query);
