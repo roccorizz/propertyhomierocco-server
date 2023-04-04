@@ -3,7 +3,7 @@ const cors = require('cors');
 let jwt = require('jsonwebtoken');
 
 const app = express()
-app.use(cors({ origin: 'http://localhost:3001' }));
+app.use(cors({ origin: 'https://propertyhomie-66cbd.web.app/' }));
 const { MongoClient, ObjectId, ServerApiVersion } = require('mongodb');
 require('dotenv').config();
 const port = process.env.PORT || 8000;
