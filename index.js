@@ -46,20 +46,20 @@ async function run() {
         const reviews = client.db('propertyHomieRocco').collection('reviews');
 
         //jwt
-        app.post('/api/jwt', (req, res) => {
+        app.post('/jwt', (req, res) => {
             const user = req.body;
-            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' });
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30d' });
             res.send({ token })
             console.log({ token })
         })
         //get 3 services
-        app.get('/api/services', async (req, res) => {
+        app.get('/services', async (req, res) => {
             const query = {}
             const cursor = serviceCollection.find(query);
             const services = await cursor.toArray();
             res.send(services);
         })
-        app.get('/api/services/:id', async (req, res) => {
+        app.get('/services/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await serviceCollection.findOne(query);
@@ -72,21 +72,21 @@ async function run() {
             res.send({ insertedCount: result.insertedCount });
         })
         //get all services
-        app.get('/api/all-services', async (req, res) => {
+        app.get('/all-services', async (req, res) => {
             const query = {};
             const cursor = serviceCollection.find(query);
             const services = await cursor.toArray();
             res.send(services);
         })
         //get single service
-        app.get('/api/service/:id', async (req, res) => {
+        app.get('/service/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await serviceCollection.findOne(query);
             res.send(result);
         })
         // get featured properties
-        app.get('/api/featured-properties', async (req, res) => {
+        app.get('/featured-properties', async (req, res) => {
             const query = { isFeatured: true };
             const limit = 6;
             const cursor = propertyCollection.find(query).limit(limit);
@@ -94,7 +94,7 @@ async function run() {
             res.send(properties);
 
         })
-        app.get('/api/featured-properties/:id', async (req, res) => {
+        app.get('/featured-properties/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const properties = await propertyCollection.findOne(query);
@@ -104,14 +104,14 @@ async function run() {
 
         // get all properties
 
-        app.get('/api/allproperties', async (req, res) => {
+        app.get('/allproperties', async (req, res) => {
             const query = {};
             const cursor = propertyCollection.find(query);
             const properties = await cursor.toArray();
             res.send(properties);
         })
         //get single property
-        app.get('/api/allproperties/:id', async (req, res) => {
+        app.get('/allproperties/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await propertyCollection.findOne(query);
@@ -126,7 +126,7 @@ async function run() {
             res.send(result);
         })
         //show all reviews
-        app.get('/api/reviews', verifyJWT, async (req, res) => {
+        app.get('/reviews', verifyJWT, async (req, res) => {
             const decoded = req.decoded;
 
             if (decoded.email !== req.query.email) {
@@ -143,7 +143,7 @@ async function run() {
             res.send(reviewss);
         })
         //single service all review
-        app.get('/api/reviews/:id', async (req, res) => {
+        app.get('/reviews/:id', async (req, res) => {
             const id = req.params.id;
             const query = { serviceId: id };
             const cursor = reviews.find(query);
@@ -158,13 +158,13 @@ async function run() {
             res.send(result);
         })
         //get single review
-        app.get('/api/single-reviews/', async (req, res) => {
+        app.get('/single-reviews/', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await reviews.findOne(query);
             res.send(result);
         })
-        app.get('/api/reviews/email', async (req, res) => {
+        app.get('/reviews/email', async (req, res) => {
             const email = req.query.email;
             const result = await reviews.find({ email: email });
             res.send(result);
