@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 let jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
+
 const app = express()
 const { MongoClient, ObjectId, ServerApiVersion } = require('mongodb');
 const { sendEmail } = require('./controllers/emailControllers');
@@ -14,21 +14,9 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     next()
 })
-// mongoose.connect(process.env.MONGODB_URI, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-// });
-
-// Create a review schema
-// const reviewSchema = new mongoose.Schema({
-//     name: { type: String, required: true },
-//     rating: { type: Number, required: true },
-//     review: { type: String, required: true },
-// });
-
-// Create a review model
-// const Review = mongoose.model('Review', reviewSchema);
-app.use(cors());
+app.use(cors({
+    origin: true
+}));
 app.use(express.json());
 
 app.get("/", (req, res) => {
