@@ -15,7 +15,7 @@ app.use((req, res, next) => {
     next()
 })
 app.use(cors({
-    origin: true
+    origin: ["http://localhost:3000", "https://property-homie.vercel.app/"]
 }));
 app.use(express.json());
 
