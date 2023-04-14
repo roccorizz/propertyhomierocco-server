@@ -143,10 +143,12 @@ async function run() {
             const result = await reviews.findOne(query);
             res.send(result);
         })
-        app.get('/reviews/email', async (req, res) => {
-            const email = req.query.email;
-            const result = await reviews.find({ email: email });
-            res.send(result);
+        app.get('/reviews/email/:email', async (req, res) => {
+            const email = req.params.email;
+            console.log(email)
+            const cursor = reviews.find({ email: email });
+            const results = await cursor.toArray();
+            res.send(results);
         })
 
         // Endpoint for getting all reviews
