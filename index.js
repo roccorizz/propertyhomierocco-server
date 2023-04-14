@@ -14,9 +14,7 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     next()
 })
-app.use(cors({
-    origin: ["http://localhost:3000", "http://localhost:3000/", "https://property-homie.vercel.app/"]
-}));
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -41,6 +39,8 @@ function verifyJWT(req, res, next) {
         next();
     })
 }
+
+
 async function run() {
     try {
         const serviceCollection = client.db('propertyHomieRocco').collection('services');
@@ -57,7 +57,9 @@ async function run() {
         // Handle POST request to /email/sendEmail
         // Handle requests to /email/sendEmail with the sendEmail handler
         app.post("/email/sendEmail", sendEmail);
-        //get 3 services
+
+
+        //get all services
         app.get('/services', async (req, res) => {
             const query = {}
             const cursor = serviceCollection.find(query);
@@ -75,13 +77,6 @@ async function run() {
             const service = req.body;
             const result = await serviceCollection.insertOne(service);
             res.send({ insertedCount: result.insertedCount });
-        })
-        //get all services
-        app.get('/all-services', async (req, res) => {
-            const query = {};
-            const cursor = serviceCollection.find(query);
-            const services = await cursor.toArray();
-            res.send(services);
         })
         //get single service
         app.get('/service/:id', async (req, res) => {
@@ -130,23 +125,7 @@ async function run() {
             const result = await reviews.insertOne(review);
             res.send(result);
         })
-        //show all reviews
-        app.get('/reviews', verifyJWT, async (req, res) => {
-            const decoded = req.decoded;
 
-            if (decoded.email !== req.query.email) {
-                res.status(403).send({ message: 'unauthorized access' })
-            }
-            let query = {};
-            if (req.query.email) {
-                query = {
-                    email: req.query.email
-                }
-            }
-            const cursor = reviews.find(query).sort({ date: 'desc' });
-            const reviewss = await cursor.toArray();
-            res.send(reviewss);
-        })
         //single service all review
         app.get('/reviews/:id', async (req, res) => {
             const id = req.params.id;
@@ -156,13 +135,7 @@ async function run() {
             res.send(results);
         })
 
-        //review delete
-        app.delete('/reviews/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await reviews.deleteOne(query);
-            res.send(result);
-        })
+
         //get single review
         app.get('/single-reviews/', async (req, res) => {
             const id = req.params.id;
@@ -175,32 +148,48 @@ async function run() {
             const result = await reviews.find({ email: email });
             res.send(result);
         })
-        // // review UPdate
-        // app.put('/update-review/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const filter = { _id: ObjectId(id) };
-        //     const review = req.body;
-        //     const option = { upsert: true };
-        //     const updatedUser = {
-        //         $set: {
-        //             message: review.message,
+
+        // Endpoint for getting all reviews
+        app.get('/reviews', async (req, res) => {
+            try {
+                const reviewss = await reviews.find();
+                res.json(reviewss);
+            } catch (error) {
+                console.error(error);
+                res.status(500).send('Server Error');
+            }
+        });
+
+
+    }
+    finally {
+
+    }
+}
+run().catch(err => console.error(err));
+app.listen(port, () => {
+    console.log(`property homie rocco is running on ${port}`);
+})
+
+        //show all reviews
+        // app.get('/reviews', verifyJWT, async (req, res) => {
+        //     const decoded = req.decoded;
+
+        //     if (decoded.email !== req.query.email) {
+        //         res.status(403).send({ message: 'unauthorized access' })
+        //     }
+        //     let query = {};
+        //     if (req.query.email) {
+        //         query = {
+        //             email: req.query.email
         //         }
         //     }
-        //     const result = await reviews.updateOne(filter, updatedUser, option);
-        //     res.send(result);
+        //     const cursor = reviews.find(query).sort({ date: 'desc' });
+        //     const reviewss = await cursor.toArray();
+        //     res.send(reviewss);
         // })
-        // Endpoint for getting all reviews
-        // app.get('/reviews', async (req, res) => {
-        //     try {
-        //         const reviews = await reviews.find();
-        //         res.json(reviews);
-        //     } catch (error) {
-        //         console.error(error);
-        //         res.status(500).send('Server Error');
-        //     }
-        // });
 
-        // // Endpoint for adding a new review
+          // // Endpoint for adding a new review
         // app.post('/reviews', async (req, res) => {
         //     const { name, rating, review } = req.body;
         //     try {
@@ -213,12 +202,11 @@ async function run() {
         //     }
         // });
 
-    }
-    finally {
 
-    }
-}
-run().catch(err => console.error(err));
-app.listen(port, () => {
-    console.log(`property homie rocco is running on ${port}`);
-})
+          // //review delete
+        // app.delete('/reviews/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const result = await reviews.deleteOne(query);
+        //     res.send(result);
+        // })
